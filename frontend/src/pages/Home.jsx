@@ -181,8 +181,7 @@ export default function Home() {
               <div className="problem-upperhead">The Problem</div>
               <h2 className="problem-title">Burnout, Distraction, Anxiety, Loneliness...</h2>
               <p className="problem-description">
-                Constant digital engagement is accelerating these problems. Without intentional frameworks, overwhelm becomes the default.
-                MindRest identifies early signs of digital exhaustion using measurable daily behaviour patterns.
+                Constant digital use is increasing these problems. Without proper habits or structure, feeling overwhelmed can become normal. Early signs of digital exhaustion can be identified through consistent patterns in daily behaviour and habits.
                 <br /><br />
                 <strong>The good news: Digital burnout can be measured, and early insight enables timely action...</strong>
               </p>
