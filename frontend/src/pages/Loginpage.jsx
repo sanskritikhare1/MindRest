@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./Loginpage.css";
 import { useNavigate } from "react-router-dom";
+import { auth, googleProvider } from "../firebase";
+import { signInWithPopup } from "firebase/auth";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -56,6 +58,51 @@ export default function AuthPage() {
     } catch (err) {
       console.error(err);
       setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      
+      console.log("Google User info:", {
+        name: user.displayName,
+        email: user.email
+      });
+
+      // Send to backend
+      const response = await fetch("http://127.0.0.1:8000/api/google-login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          name: user.displayName,
+          email: user.email
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userName", data.user.name);
+        navigate("/dashboard");
+      } else {
+        setError(data.message || "Google Sign-In failed.");
+      }
+    } catch (err) {
+      console.error("Google Sign-In Error:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,7 +114,7 @@ export default function AuthPage() {
           {isLogin ? "Welcome back! Enter your credentials." : "Join us to track your digital wellness."}
         </p>
 
-        {error && <div className="error-badge" style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+        {error && <div className="error-badge">{error}</div>}
 
         <form onSubmit={handleAction}>
           {/* REGISTRATION ONLY FIELDS */}
@@ -120,9 +167,25 @@ export default function AuthPage() {
           </button>
         </form>
 
+        <div className="social-separator">
+          <span>OR</span>
+        </div>
+
+        <button 
+          className="google-btn" 
+          onClick={handleGoogleSignIn}
+          disabled={loading}
+        >
+          <img 
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
+            alt="Google" 
+            className="google-icon"
+          />
+          {isLogin ? "Sign in with Google" : "Sign up with Google"}
+        </button>
+
         <p className="footer-text">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-          {/* This span is the magic button that switches the page */}
           <span
             className="text-link"
             style={{ cursor: 'pointer', color: '#1D4D4F', fontWeight: 'bold' }}
@@ -138,4 +201,4 @@ export default function AuthPage() {
       </div>
     </div>
   );
-}
+}

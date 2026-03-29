@@ -58,6 +58,34 @@ class AuthController extends Controller
             'token' => $token   // ✅ SEND TOKEN
         ]);
     }
+    
+    /** POST /api/google-login */
+    public function googleLogin(Request $request)
+    {
+        $data = $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email',
+        ]);
+
+        // Find existing user or create a new one
+        $user = User::where('email', $data['email'])->first();
+
+        if (!$user) {
+            $user = User::create([
+                'name'     => $data['name'],
+                'email'    => $data['email'],
+                'password' => Hash::make(bin2hex(random_bytes(10))), // Random secure password
+                'gender'   => null, // Optional for Google users
+            ]);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'user'  => $user,
+            'token' => $token
+        ]);
+    }
 
     /** POST /api/logout */
     public function logout(Request $request)

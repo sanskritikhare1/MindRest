@@ -2,13 +2,14 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./Games.css";
 
+// gradFrom/gradTo drive the per-card Launch Sequence button gradient
 const MOCK_GAMES = [
-  { id: 1, name: "Breathing Circle", description: "Guided breathing for instant calm.", color: "#b2e2d2", icon: "adjust" },
-  { id: 2, name: "Bubble Pop", description: "Pop bubbles to release tension.", color: "#d1e9ff", icon: "bubble_chart" },
-  { id: 3, name: "Reaction Test", description: "Test focus with rapid color changes.", color: "#ffd8d1", icon: "timer" },
-  { id: 4, name: "Memory Match", description: "Find pairs of hidden symbols.", color: "#e2d1ff", icon: "grid_view" },
-  { id: 5, name: "Zen Sand", description: "Draw patterns in digital sand.", color: "#f5f5dc", icon: "gesture" },
-  { id: 6, name: "Focus Flow", description: "Align shapes for concentration.", color: "#d1ffd6", icon: "filter_center_focus" }
+  { id: 1, name: "Breathing Circle", description: "Guided breathing for instant calm.", color: "#b2e2d2", icon: "adjust", gradFrom: "#2A9D8F", gradTo: "#1d4d4f" },
+  { id: 2, name: "Bubble Pop", description: "Pop bubbles to release tension.", color: "#d1e9ff", icon: "bubble_chart", gradFrom: "#5ba4e0", gradTo: "#1d4d4f" },
+  { id: 3, name: "Reaction Test", description: "Test focus with rapid color changes.", color: "#ffd8d1", icon: "timer", gradFrom: "#e76f51", gradTo: "#b54b35" },
+  { id: 4, name: "Memory Match", description: "Find pairs of hidden symbols.", color: "#e2d1ff", icon: "grid_view", gradFrom: "#7c5cbf", gradTo: "#1d4d4f" },
+  { id: 5, name: "Zen Sand", description: "Draw patterns in digital sand.", color: "#f5f5dc", icon: "gesture", gradFrom: "#c8b97a", gradTo: "#1d4d4f" },
+  { id: 6, name: "Focus Flow", description: "Align shapes for concentration.", color: "#d1ffd6", icon: "filter_center_focus", gradFrom: "#4cad60", gradTo: "#1d4d4f" }
 ];
 
 // 1. Breathing Circle
@@ -463,28 +464,69 @@ export default function GamesPage() {
   return (
     <div className="min-h-screen font-['Plus_Jakarta_Sans'] pb-20 games-page">
 
-      {/* CATALOG GRID */}
-      <div className="max-w-7xl mx-auto px-6 py-10 z-30 relative">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
+      {/* PAGE HEADER — stronger visual hierarchy */}
+      <div className="text-center mb-10 px-4 pt-8 relative z-10">
+        <p className="text-[10px] font-black uppercase tracking-[0.35em] text-[#2A9D8F] mb-3">
+          Mindful Gaming
+        </p>
+        <h2 className="text-3xl md:text-4xl font-black text-[#1d4d4f] tracking-tight leading-tight">
+          Relax &amp; Reset
+        </h2>
+        <p className="text-sm text-slate-400 max-w-sm mx-auto mt-3 leading-relaxed font-medium">
+          Short activities to reduce stress and sharpen focus — tuned to your current state.
+        </p>
+      </div>
+
+      {/* CATALOG GRID — Larger gap to fill the space visually */}
+      <div className="max-w-7xl mx-auto px-6 py-4 z-10 relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20 mb-16">
           {MOCK_GAMES.map((game) => (
             <div
               key={game.id}
-              className="game-card bg-white rounded-[1.75rem] p-6 border border-gray-50 flex flex-col items-start shadow-sm h-full group hover:shadow-xl transition-all duration-500"
+              className="game-card rounded-[1.75rem] flex flex-col items-start h-full group"
             >
-              <div
-                className="w-11 h-11 rounded-[0.875rem] mb-4 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform"
-                style={{ backgroundColor: `${game.color}40`, border: `1px solid ${game.color}60` }}
-              >
-                <span className="material-symbols-outlined text-xl font-bold" style={{ color: '#1d4d4f' }}>{game.icon}</span>
+              {/* All card content sit above the ::before shimmer — justify-center for vertical centering */}
+              <div className="relative z-10 flex flex-col items-center justify-center w-full h-full text-center">
+
+                {/* Icon badge with soft glow ring matching game color — balanced margins */}
+                <div
+                  className="w-12 h-12 rounded-[0.9rem] mb-6 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform duration-200"
+                  style={{
+                    background: `linear-gradient(135deg, ${game.color}60, ${game.color}20)`,
+                    border: `1.5px solid ${game.color}90`,
+                    boxShadow: `0 0 0 6px ${game.color}22`
+                  }}
+                >
+                  <span
+                    className="material-symbols-outlined text-xl"
+                    style={{ color: game.gradFrom, fontVariationSettings: "'FILL' 1" }}
+                  >
+                    {game.icon}
+                  </span>
+                </div>
+
+                {/* Bold title — primary visual hierarchy at the center block */}
+                <h3 className="text-xl font-black mb-1.5 text-[#1d4d4f] tracking-tight leading-tight w-full">
+                  {game.name}
+                </h3>
+
+                {/* Subdued description — symmetrical spacing */}
+                <p className="text-slate-400 text-xs mb-10 font-medium leading-relaxed w-full max-w-[200px]">
+                  {game.description}
+                </p>
+
+                {/* Launch button — graduation tuned to this game's icon accent */}
+                <button
+                  onClick={() => handleStartGame(game.name)}
+                  className="w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-[0.16em] text-white transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
+                  style={{
+                    background: `linear-gradient(135deg, ${game.gradFrom} 0%, ${game.gradTo} 100%)`,
+                    boxShadow: `0 6px 16px -4px ${game.gradFrom}55`
+                  }}
+                >
+                  Launch Sequence
+                </button>
               </div>
-              <h3 className="text-lg font-black mb-1.5 text-[#1d4d4f] tracking-tight">{game.name}</h3>
-              <p className="text-slate-400 text-xs mb-5 font-medium leading-relaxed">"{game.description}"</p>
-              <button
-                onClick={() => handleStartGame(game.name)}
-                className="mt-auto w-full py-3 rounded-xl text-xs font-bold uppercase tracking-[0.2em] bg-slate-50 text-[#1d4d4f] hover:bg-[#1d4d4f] hover:text-white transition-all shadow-sm border border-slate-100 border-b-2"
-              >
-                Launch Sequence
-              </button>
             </div>
           ))}
         </div>

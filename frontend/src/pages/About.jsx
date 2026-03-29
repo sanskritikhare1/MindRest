@@ -48,19 +48,19 @@ export default function About() {
           <div className="about-stats-container">
             <div className="stat-card">
               <h3>95%</h3>
-              <p>Detection accuracy for early signs of digital exhaustion.</p>
+              <p>Accuracy in detecting early signs of digital exhaustion</p>
             </div>
             <div className="stat-card">
               <h3>4.2h</h3>
-              <p>Average daily usage threshold before focus begins to decline.</p>
+              <p>Average daily screen time before focus starts to drop</p>
             </div>
             <div className="stat-card">
               <h3>2x</h3>
-              <p>Improvement in self-reported focus and well-being with regular use.</p>
+              <p>Improvement in focus and well-being reported by users with regular use</p>
             </div>
             <div className="stat-card">
               <h3>Privacy</h3>
-              <p>Based on usage patterns, not personal content.</p>
+              <p>Analysis is based on usage patterns only, not personal content.</p>
             </div>
           </div>
 

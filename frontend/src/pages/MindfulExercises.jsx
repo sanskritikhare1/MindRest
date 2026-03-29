@@ -151,7 +151,7 @@ export default function MindfulExercises() {
 
       {/* 3. TABS */}
       <div className="max-w-7xl mx-auto w-full px-6 mt-10">
-        <div className="flex gap-4 border-b border-gray-200 pb-6 overflow-x-auto no-scrollbar">
+        <div className="flex justify-center gap-4 border-b border-gray-200 pb-6 overflow-x-auto no-scrollbar">
           {["All Practices", "Visual", "Physical", "Mental"].map((tab) => (
             <button
               key={tab}

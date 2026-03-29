@@ -49,13 +49,19 @@ export default function PredictionPage({ passedRisk = "", score = 0, screenTime 
     themeColor = "#E76F51"; // Orange
   }
 
-  const getReason = () => {
-    if (screenTimeNum > 6) return `${screenTimeNum}h Screen Usage`;
-    if (stressNum > 7) return "High stress levels";
-    if (sleepNum < 5) return "Not enough sleep";
-    if (focusNum < 4) return "Low focus";
-    return "Balanced routine";
-  };
+ const getReason = () => {
+  let reasons = [];
+
+  if (screenTimeNum > 6) reasons.push(`${screenTimeNum}h screen time`);
+  if (stressNum >= 7) reasons.push("high stress");
+  if (sleepNum >= 7) reasons.push("poor sleep");
+  if (focusNum <= 4) reasons.push("low focus");
+
+  if (reasons.length === 0) return "Balanced routine";
+
+  // Return max 2 reasons to keep UI clean
+  return reasons.slice(0, 2).join(" + ");
+};
 
   const getDynamicContent = () => {
     if (contentKey === "High") {

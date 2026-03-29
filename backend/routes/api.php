@@ -13,6 +13,7 @@ use App\Http\Controllers\ActivityLogController; // Added for activity logs
 // ─── Public Routes ────────────────────────────────────────────
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
+Route::post('/google-login', [AuthController::class, 'googleLogin']);
 
 // Static content — no auth needed
 Route::get('/exercises', [ExerciseController::class, 'index']);
