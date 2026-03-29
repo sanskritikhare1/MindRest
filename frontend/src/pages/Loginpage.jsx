@@ -23,10 +23,11 @@ export default function AuthPage() {
     setError("");
 
     // Points to your Laravel backend
-    const endpoint = isLogin ? "/login" : "/register";;
+    const API_BASE = "http://localhost:8000/api";
+    const endpoint = isLogin ? "/login" : "/register";
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api${endpoint.replace('/api', '')}`, {
+      const response = await fetch(`${API_BASE}${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +77,7 @@ export default function AuthPage() {
       });
 
       // Send to backend
-      const response = await fetch("http://127.0.0.1:8000/api/google-login", {
+      const response = await fetch("http://localhost:8000/api/google-login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -163,7 +164,7 @@ export default function AuthPage() {
           </div>
 
           <button type="submit" className="login-btn" disabled={loading}>
-            {loading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
+            {(loading && formData.email) ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
           </button>
         </form>
 

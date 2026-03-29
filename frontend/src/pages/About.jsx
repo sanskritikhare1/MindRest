@@ -47,7 +47,7 @@ export default function About() {
           {/* LEFT SIDE: Research & Data Cards (Replaces the Image Grid) */}
           <div className="about-stats-container">
             <div className="stat-card">
-              <h3>95%</h3>
+              <h3>96%</h3>
               <p>Accuracy in detecting early signs of digital exhaustion</p>
             </div>
             <div className="stat-card">
@@ -73,8 +73,8 @@ export default function About() {
               <div className="step">
                 <span className="step-num">01</span>
                 <div>
-                  <h4>Signal Detection</h4>
-                  <p>Analyses behavioural patterns to identify early shifts from focus to exhaustion.</p>
+                  <h4>Behavioral Data</h4>
+                  <p> Tracks your digital habits and screen usage to detect early signs of fatigue.</p>
                 </div>
               </div>
               <div className="step">

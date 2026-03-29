@@ -149,3 +149,49 @@
     background-color: #f1f5f9;
     color: #1D4D4F !important;
 }
+
+/* User Session & Logout Styles */
+.user-session {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: 20px;
+}
+
+.user-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #264653;
+    border-right: 1px solid #e2e8f0;
+    padding-right: 16px;
+    white-space: nowrap;
+}
+
+.logout-btn {
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #E76F51; /* Coral for clear logout action */
+    padding: 0 16px;
+    height: 32px;
+    border-radius: 20px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logout-btn:hover {
+    background-color: #d66044;
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 12px rgba(231, 111, 81, 0.25);
+}
+
+.logout-btn svg {
+    font-size: 0.9rem;
+}

@@ -1,11 +1,12 @@
 import React, { useState, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLeaf, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faLeaf, faChevronDown, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 
 export default function Header() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const closeTimeout = useRef(null);
 
@@ -20,6 +21,13 @@ export default function Header() {
     closeTimeout.current = setTimeout(() => {
       setDropdownOpen(false);
     }, 300);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userName");
+    navigate("/login");
   };
 
   return (
@@ -67,7 +75,16 @@ export default function Header() {
 
         {/* ACTIONS */}
         <div className="header-actions">
-          <Link to="/login" className="login-btn">Get Started</Link>
+          {localStorage.getItem("token") ? (
+            <div className="user-session">
+              <span className="user-name">Hello, {localStorage.getItem("userName") || "User"}</span>
+              <button onClick={handleLogout} className="logout-btn" title="Sign Out">
+                <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="login-btn">Get Started</Link>
+          )}
         </div>
       </div>
     </header>
