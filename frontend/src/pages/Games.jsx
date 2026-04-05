@@ -9,7 +9,15 @@ const MOCK_GAMES = [
   { id: 3, name: "Reaction Test", description: "Test focus with rapid color changes.", color: "#ffd8d1", icon: "timer", gradFrom: "#e76f51", gradTo: "#b54b35" },
   { id: 4, name: "Memory Match", description: "Find pairs of hidden symbols.", color: "#e2d1ff", icon: "grid_view", gradFrom: "#7c5cbf", gradTo: "#1d4d4f" },
   { id: 5, name: "Zen Sand", description: "Draw patterns in digital sand.", color: "#f5f5dc", icon: "gesture", gradFrom: "#c8b97a", gradTo: "#1d4d4f" },
-  { id: 6, name: "Focus Flow", description: "Align shapes for concentration.", color: "#d1ffd6", icon: "filter_center_focus", gradFrom: "#4cad60", gradTo: "#1d4d4f" }
+  {
+    id: 6,
+    name: "Shade Finder",
+    description: "Spot the odd color to test visual focus.",
+    color: "#d1ffd6",
+    icon: "palette",
+    gradFrom: "#4cad60",
+    gradTo: "#1d4d4f"
+  }
 ];
 
 // 1. Breathing Circle
@@ -324,78 +332,75 @@ const ZenSand = () => {
   );
 };
 
-// 6. Focus Flow
-const FocusFlow = () => {
+// 6. Shade Finder (Colorblind Game)
+const ShadeFinder = () => {
+  const [gridSize, setGridSize] = useState(2);
+  const [targetIndex, setTargetIndex] = useState(0);
+  const [colors, setColors] = useState({ base: "", odd: "" });
   const [score, setScore] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [targetPos, setTargetPos] = useState({ x: 50, y: 50 });
-  const containerRef = useRef(null);
 
-  // Randomly move the target
+  const generateLevel = useCallback(() => {
+    // Generate a random base color
+    const r = Math.floor(Math.random() * 200) + 20;
+    const g = Math.floor(Math.random() * 200) + 20;
+    const b = Math.floor(Math.random() * 200) + 20;
+
+    // Difficulty logic: 'diff' gets smaller as score increases
+    const diff = Math.max(3, 40 - Math.floor(score / 2));
+
+    // Create the "odd" color by slightly lightening/darkening
+    const isLighter = Math.random() > 0.5;
+    const adjust = isLighter ? diff : -diff;
+
+    setColors({
+      base: `rgb(${r}, ${g}, ${b})`,
+      odd: `rgb(${r + adjust}, ${g + adjust}, ${b + adjust})`
+    });
+    setTargetIndex(Math.floor(Math.random() * (gridSize * gridSize)));
+  }, [gridSize, score]);
+
   useEffect(() => {
-    if (!isPlaying) return;
-    const interval = setInterval(() => {
-      setTargetPos({ x: Math.random() * 60 + 20, y: Math.random() * 60 + 20 });
-    }, 1500);
-    return () => clearInterval(interval);
-  }, [isPlaying]);
+    generateLevel();
+  }, [gridSize, generateLevel]);
 
-  // Handle Score via drag interactions
-  const handleDrag = () => {
-    if (isPlaying && score < 100) {
-      setScore(s => Math.min(s + 2, 100));
+  const handleSquareClick = (index) => {
+    if (index === targetIndex) {
+      setScore(s => s + 1);
+      // Increase grid size at specific intervals
+      if (score === 2) setGridSize(3);
+      if (score === 8) setGridSize(4);
+      if (score === 15) setGridSize(5);
+      if (score === 25) setGridSize(6);
+      generateLevel();
     }
   };
 
-  // Passive score decay if not tracking
-  useEffect(() => {
-    if (!isPlaying || score >= 100) return;
-    const interval = setInterval(() => {
-      setScore(s => Math.max(s - 1, 0));
-    }, 500);
-    return () => clearInterval(interval);
-  }, [isPlaying, score]);
-
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden bg-transparent" ref={containerRef}>
-      <div className="absolute top-12 text-center z-20 bg-white/80 backdrop-blur-md p-6 rounded-[2rem] border border-white shadow-xl min-w-[300px]">
-        <h2 className="text-2xl font-black text-[#1d4d4f] tracking-tight">Focus Flow</h2>
-        <p className="text-xs text-slate-500 mt-2 mb-6 font-bold uppercase tracking-widest">Keep the orb steady to charge.</p>
-        <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden shadow-inner">
-          <motion.div className="bg-gradient-to-r from-[#e76f51] to-[#f4a261] h-full" animate={{ width: `${score}%` }} />
-        </div>
+    <div className="w-full h-full flex flex-col items-center justify-center p-4">
+      <div className="absolute top-12 text-center z-10 bg-white/50 backdrop-blur-md px-10 py-6 rounded-[2rem] border border-white/60 shadow-lg">
+        <h2 className="text-sm font-black text-[#1d4d4f] uppercase tracking-widest">Score</h2>
+        <p className="text-6xl font-black text-[#4cad60] mt-2 leading-none">{score}</p>
       </div>
 
-      {!isPlaying ? (
-        <button onClick={() => setIsPlaying(true)} className="px-12 py-5 bg-[#1d4d4f] text-white rounded-2xl font-black shadow-2xl hover:bg-[#133233] transition-colors z-20 uppercase tracking-widest text-sm">
-          Initialize Flow
-        </button>
-      ) : (
-        <>
+      <div
+        className="grid gap-3 w-full max-w-[500px] aspect-square"
+        style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }}
+      >
+        {[...Array(gridSize * gridSize)].map((_, i) => (
           <motion.div
-            animate={{ left: `${targetPos.x}%`, top: `${targetPos.y}%` }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="absolute w-40 h-40 rounded-full border-2 border-dashed border-[#1d4d4f]/30 flex items-center justify-center pointer-events-none"
+            key={i}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => handleSquareClick(i)}
+            style={{
+              backgroundColor: i === targetIndex ? colors.odd : colors.base,
+              borderRadius: "1rem",
+              cursor: "pointer",
+            }}
+            className="shadow-lg transition-transform"
           />
-          <motion.div
-            drag
-            dragConstraints={containerRef}
-            dragElastic={0.1}
-            dragMomentum={false}
-            onDrag={handleDrag}
-            whileDrag={{ scale: 0.9, boxShadow: "0 0 40px rgba(42,157,143,0.8)" }}
-            className="w-20 h-20 bg-gradient-to-br from-[#1d4d4f] to-[#2A9D8F] rounded-full shadow-2xl flex items-center justify-center cursor-grab active:cursor-grabbing z-20 border-4 border-white/20"
-          >
-            <span className="material-symbols-outlined text-white/50 text-xl font-bold">open_with</span>
-          </motion.div>
-          {score >= 100 && (
-            <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="absolute z-30 bg-white p-12 rounded-[3rem] shadow-[0_20px_60px_rgba(231,111,81,0.3)] text-center border border-slate-50">
-              <h2 className="text-5xl font-black text-[#e76f51] mb-2 tracking-tighter">Flow Achieved</h2>
-              <p className="text-[#1d4d4f] font-bold uppercase tracking-widest text-xs">Your mind is centered.</p>
-            </motion.div>
-          )}
-        </>
-      )}
+        ))}
+      </div>
+      <p className="mt-8 text-slate-400 font-bold uppercase tracking-widest text-[10px]">Find the slightly different shade</p>
     </div>
   );
 };
@@ -456,7 +461,7 @@ export default function GamesPage() {
       case "Reaction Test": return <ReactionTest />;
       case "Memory Match": return <MemoryMatch />;
       case "Zen Sand": return <ZenSand />;
-      case "Focus Flow": return <FocusFlow />;
+      case "Shade Finder": return <ShadeFinder />;
       default: return null;
     }
   };

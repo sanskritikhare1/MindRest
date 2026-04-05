@@ -122,7 +122,7 @@ export default function Home() {
             </h1>
             <p>
               Predict digital exhaustion early.
-              Balance your productivity and mental well-being with AI-driven insights tailored to your daily patterns.
+              Balance your productivity and mental well-being with AI-driven insights based on your daily usage patterns.
             </p>
             <Link to="/assessment">
               <button className="home-hero-btn">Check Your Exhaustion Level</button>
@@ -146,8 +146,8 @@ export default function Home() {
               <div className="feature-icon icon-orange">
                 <FontAwesomeIcon icon={faBrain} />
               </div>
-              <h3>AI Risk Predictor</h3>
-              <p className="feature-description">Predict your digital exhaustion risk using AI.</p>
+              <h3>ML Risk Predictor</h3>
+              <p className="feature-description">Predict your digital exhaustion risk.</p>
             </div>
           </div>
 

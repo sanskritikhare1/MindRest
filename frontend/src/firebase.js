@@ -2,7 +2,6 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 
-// MindRest Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAOO8XI5yRS2LXboaZgYcuvNCeJXYMOGZw",
   authDomain: "mindrest-9fca3.firebaseapp.com",

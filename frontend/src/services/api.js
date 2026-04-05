@@ -8,23 +8,22 @@ const api = axios.create({
   },
 });
 
-// Attach Bearer token to every request
+// ✅ Attach correct token
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('mindrest_token');
+  const token = localStorage.getItem('token'); // FIXED
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-// Global error handling
+// ✅ Fix redirect loop
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('mindrest_token');
-      localStorage.removeItem('mindrest_user');
-      window.location.href = '/login';
+      localStorage.removeItem('token'); // FIXED
+      // ❌ NO redirect here
     }
     return Promise.reject(error);
   }

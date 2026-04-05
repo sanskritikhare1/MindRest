@@ -74,21 +74,21 @@ export default function About() {
                 <span className="step-num">01</span>
                 <div>
                   <h4>Behavioral Data</h4>
-                  <p> Tracks your digital habits and screen usage to detect early signs of fatigue.</p>
+                  <p> Tracks your digital habits and screen usage to detect early signs of digital exhaustion and fatigue.</p>
                 </div>
               </div>
               <div className="step">
                 <span className="step-num">02</span>
                 <div>
                   <h4>Prediction</h4>
-                  <p>ML model estimates when you are approaching your personal exhaustion threshold.</p>
+                  <p> ML model generates a score estimating your current exhaustion level.</p>
                 </div>
               </div>
               <div className="step">
                 <span className="step-num">03</span>
                 <div>
                   <h4>Action</h4>
-                  <p>Guides you to calming exercises, journaling, or breaks before burnout develops.</p>
+                  <p>Offers guidance like calming exercises, journaling, or breaks before burnout develops.</p>
                 </div>
               </div>
             </div>
